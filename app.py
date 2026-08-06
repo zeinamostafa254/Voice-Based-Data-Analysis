@@ -298,4 +298,23 @@ with right:
                 '<div class="empty-console">Waiting for input<span class="cursor">&nbsp;</span></div>',
                 unsafe_allow_html=True,
             )
+learn = st.checkbox(
+    "Teach Assistant"
+)
 
+if learn:
+
+    solution = st.text_area(
+        "Reference Solution"
+    )
+
+    if st.button("Save Knowledge"):
+
+        from rag.feedback import learn_from_feedback
+
+        message = learn_from_feedback(
+            code,
+            solution
+        )
+
+        st.success(message)

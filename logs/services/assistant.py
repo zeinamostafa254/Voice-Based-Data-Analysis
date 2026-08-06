@@ -1,12 +1,27 @@
 from router import route
 from llm.classifier import classify_request
+from memory.memory import get_memory, add_interaction
 
 
-def process_request(user_input: str) -> str:
-    """
-    Main assistant pipeline.
-    """
+def process_request(user_input: str):
 
-    mode = classify_request(user_input)
+    # Load conversation memory
+    memory = get_memory()
 
-    return route(user_input, mode)
+    # Detect user intent
+    intent = classify_request(user_input, memory)
+
+    # Route request
+    response = route(
+        user_input=user_input,
+        intent=intent,
+        memory=memory,
+    )
+
+    # Save interaction
+    add_interaction(
+        question=user_input,
+        answer=response,
+    )
+
+    return response

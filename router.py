@@ -1,17 +1,32 @@
 from explain.explainer import explain_code
 from rag.generator import generate_code
+from tools.code_executor import execute_code
 
 
-def route(user_input: str, mode: str = "explain") -> str:
+def route(
+    user_input: str,
+    intent: str,
+    memory: str = "",
+):
 
     if not user_input.strip():
-        return "Please enter something."
+        return "Please enter a request."
 
-    if mode == "explain":
-        return explain_code(user_input)
+    intent = intent.lower()
 
-    elif mode == "generate":
-        return generate_code(user_input)
+    if intent == "explain":
+        return explain_code(
+            user_input,
+            memory
+        )
 
-    else:
-        return "Unknown mode."
+    elif intent == "generate" or intent == "create" or intent == "implement" or intent == "project" or intent == "make":
+        return generate_code(
+            user_input,
+            memory
+        )
+
+    elif intent == "tool":
+        return execute_code(user_input)
+
+    return "Unable to determine the request type."

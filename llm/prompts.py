@@ -15,4 +15,12 @@ Code:
 
 ```python
 {code}
+
+Conversation Memory:
+
+{memory}
+
+User Request:
+
+{user_input}
 """

@@ -1,3 +1,5 @@
+from typer import prompt
+
 from llm.model import get_llm
 from rag.retriever import get_retriever
 from llm.relevance_checker import is_relevant
@@ -15,11 +17,11 @@ def generate_code(question: str):
         for doc in docs
     )
 
-    # -----------------------------
+  
     # CASE 1 : Nothing retrieved
-    # -----------------------------
+    
 
-    if not docs:
+    '''if not docs:
 
         prompt = f"""
 You are an expert software engineer.
@@ -29,23 +31,33 @@ The vector database contains no useful documentation.
 Answer the user's request using your own programming knowledge.
 
 Generate complete, clean and production-ready code.
+    
 
 User request:
 
 {question}
-"""
+"""'''
+    if not docs:
 
-        return llm.invoke(prompt).content
+          return """
+               I couldn't find relevant knowledge.
 
-    # -----------------------------
+               If you know the correct solution,
+               enable **Teach Assistant**
+               below and I'll remember it for future requests.
+                """
+
+    return llm.invoke(prompt).content
+
+   
     # CASE 2 : Retrieved documents
-    # -----------------------------
+    
 
     relevant = is_relevant(question, context)
 
-    # -----------------------------
+    
     # CASE 2A : Retrieved docs are relevant
-    # -----------------------------
+    
 
     if relevant:
 
@@ -75,9 +87,8 @@ Return:
 
         return llm.invoke(prompt).content
 
-    # -----------------------------
     # CASE 2B : Retrieved docs are irrelevant
-    # -----------------------------
+    
 
     prompt = f"""
 The retrieved documentation is unrelated.
